@@ -1,50 +1,59 @@
 # Taller-RUNDECK-2025
-taller de rundeck con posgresql y proxys inversos 
+Taller de Rundeck con PostgreSQL y proxies inversos.
 
+## Paso 1. Instalación de Rundeck Community
 
-# Paso 1. Instalacion de Rundeck Community
-
-## 1.1. JDK Java 11
+### 1.1. JDK Java 11
 ```bash
-Sudo yum install java-11-openjdk-devel
+sudo yum install java-11-openjdk-devel
 ```
-## 1.2. Instalación automática vía curl
+
+### 1.2. Instalación automática vía curl
 ```bash
 curl https://raw.githubusercontent.com/rundeck/packaging/main/scripts/rpm-setup.sh 2> /dev/null | sudo bash -s rundeck
 ```
-## 1.3. Intalacion de Rundeck
+
+### 1.3. Instalación de Rundeck
 ```bash
 sudo yum install rundeck
 ```
-## 1.4. Activacion de Puerto TCP para Rundeck 
-```code
+
+### 1.4. Activación de Puerto TCP para Rundeck
+```bash
 sudo firewall-cmd --permanent --add-port=4440/tcp
 sudo firewall-cmd --reload
 sudo netstat -tuln | grep 4440
 ```
-## 1.5. Instalcion de Python3
+
+### 1.5. Instalación de Python3
 ```bash
 sudo yum install python3-gps
 ```
 
-## 1.6. Ejecucion de Log para ver posibles problemas 
+### 1.6. Ejecución de Log para ver posibles problemas
 ```bash
 tail -f /var/log/rundeck/service.log
 ```
-_En este paso, Rundeck solo funcionará para las personas que estén en la misma red local.
-Si lo estás ejecutando de forma local en tu equipo, funcionará correctamente.
-Sin embargo, si lo estás ejecutando desde un servidor, será necesario que tú y los demás usuarios estén conectados a la misma red._
+> [!IMPORTANT]
+> **Conectividad en red para Rundeck**
+>
+> En este paso, Rundeck solo funcionará para las personas que estén en la misma red local.  
+> Si lo estás ejecutando de forma local en tu equipo, funcionará correctamente.  
+> 
+> Sin embargo, si lo estás ejecutando desde un servidor, será necesario que tú y los demás usuarios estén conectados a la misma red.
+>
+> ---
+>
+> En caso de que estés utilizando una VPN para acceder al servidor, será necesario configurar un **proxy inverso** para que Rundeck sea accesible desde fuera de la red local.
 
-_En caso de que estés utilizando una VPN para acceder al servidor, será necesario configurar un proxy inverso para que Rundeck sea accesible desde fuera de la red local._
+## Paso 2. Proxy inverso con Apache httpd
 
-
-# 2. Proxy inveroso con Apache httpd 
-
-2.1. Instalacion de Apache 
+### 2.1. Instalación de Apache
 ```bash
 sudo yum install httpd -y
 ```
-2.2. Habilitar Modulos Necesarios 
+
+### 2.2. Habilitar Módulos Necesarios
 ```bash
 # Habilitar e iniciar el servicio
 sudo systemctl enable httpd
@@ -53,10 +62,11 @@ sudo systemctl start httpd
 # Verificar estado
 sudo systemctl status httpd
 
-Reiniciar Apcahe 
+# Reiniciar Apache
 sudo systemctl restart httpd
 ```
-## 2.3 Creacionde de Archivo de Configuracion 
+
+### 2.3. Creación de Archivo de Configuración
 ```bash
 sudo nano /etc/apache2/sites-available/rundeck.conf
 ```
@@ -80,11 +90,13 @@ sudo nano /etc/apache2/sites-available/rundeck.conf
     RewriteRule /(.*) ws://localhost:4440/$1 [P,L]
 </VirtualHost>
 ```
-### 2.4. Reiniciar Servicios 
+
+### 2.4. Reiniciar Servicios
 ```bash
 sudo systemctl restart httpd
 ```
-## 2.5. Configuracion de Extras para el Proxy
+
+### 2.5. Configuración de Extras para el Proxy
 ```bash
 sudo nano /etc/rundeck/rundeck-config.properties
 ```
@@ -92,14 +104,14 @@ sudo nano /etc/rundeck/rundeck-config.properties
 grails.serverURL=http://100.76.213.65:4440
 server.useForwardHeaders=true
 
-#tailscale
+# tailscale
 rundeck.security.authorization.preauthenticated.redirectUserToServer=true
 rundeck.security.authorization.preauthenticated.redirectLogout=true
 rundeck.security.authorization.preauthenticated.userNameHeader=X-Forwarded-User
 rundeck.security.authorization.preauthenticated.userRolesHeader=X-Forwarded-Roles
 ```
 
-## 2.5. Activacion de Puertos TCP para Apache 
+### 2.6. Activación de Puertos TCP para Apache
 ```bash
 sudo firewall-cmd --permanent --add-port=80/tcp
 
@@ -109,69 +121,73 @@ sudo firewall-cmd --reload
 # Reinicio de Servicios Rundeck y httpd
 sudo systemctl restart httpd rundeckd
 
-# Ejecucion de los logs de Rundeck
+# Ejecución de los logs de Rundeck
 tail -f /var/log/rundeck/service.log /var/log/httpd/error_log
 ```
 
-## Conexion con PosgreSQL
+## Paso 3. Conexión con PostgreSQL
 
-## 3.1. Instalacion de PosgreSQL
+### 3.1. Instalación de PostgreSQL
 ```bash
-sudo yum install postgresql-server  -y
+sudo yum install postgresql-server -y
 
-#Status de Posgres
+# Estado de PostgreSQL
 sudo systemctl status postgresql
 
-#inicializar un nuevo clúster de base de datos PostgreSQ
+# Inicializar un nuevo clúster de base de datos PostgreSQL
 sudo postgresql-setup --initdb
 
-#Iniciar  PosgreSQL
+# Iniciar PostgreSQL
 sudo systemctl start postgresql
 
-habilitar el inicio automático del servicio PostgreSQL cuando el sistema operativo arranque.
+# Habilitar el inicio automático del servicio PostgreSQL cuando el sistema operativo arranque.
 sudo systemctl enable postgresql
 ```
 
-## 3.2 Ingresar a PosgreSQL
+### 3.2. Ingreso a PostgreSQL
 ```bash
-##Acceso a Pogresql
+# Acceso a PostgreSQL
 sudo -i -u postgres
 
-#aceder al prompt de posgresql
+# Acceder al prompt de PostgreSQL
 psql
 ```
-## 3.3. Creacion de la Base de Datos
+
+### 3.3. Creación de la Base de Datos
 ```bash
-create database rundeckdb; 
+create database rundeckdb;
 ```
-## 3.4. Creacion de Usuario y Permisos 
+
+### 3.4. Creación de Usuario y Permisos
 ```bash
-#Crear el usuario
+# Crear el usuario
 create user rundeckuser with password 'pass personalizado';
 
-#Asignar Permisos al Usuario Creado
+# Asignar permisos al usuario creado
 grant ALL privileges on database rundeckdb to rundeckuser;
 ```
-## 3.5. Configuración del archivo de propiedades de Rundeck
+
+### 3.5. Configuración del archivo de propiedades de Rundeck
 ```bash
- sudo nano /etc/rundeck/rundeck-config.properties
+sudo nano /etc/rundeck/rundeck-config.properties
 ```
 ```text
-dataSource.driverClassName = org.postgresql.Driver  
-dataSource.url = jdbc:postgresql://localhost/rundeck   
-dataSource.username = rundeckuser  d
-ataSource.password = passwordForRundeck
+dataSource.driverClassName = org.postgresql.Driver
+dataSource.url = jdbc:postgresql://localhost/rundeck
+dataSource.username = rundeckuser
+dataSource.password = passwordForRundeck
 ```
 > [!NOTE]
-> comentar la siguientes lineas
->
-> #dataSource.dbCreate =  
+> Comentar las siguientes líneas
+> ```
+> #dataSource.dbCreate =
 > #dataSource.url =
+> ```
 
-## 3.6. Configuracion de pg_hba.conf Para IPV4 Y PIV6
-``bash
+### 3.6. Configuración de pg_hba.conf para IPv4 y IPv6
+```bash
 sudo nano /var/lib/pgsql/data/pg_hba.conf
-``
+```
 ```bash
 # IPv4 local connections:
 host    all             rundeckuser     127.0.0.1/32            md5
@@ -180,13 +196,10 @@ host    all             rundeckuser     ::1/128                 md5
 ```
 > [!TIP]
 > En este archivo podrás asignar roles a los usuarios.
->
 > ```bash
 > sudo nano /etc/rundeck/realm.properties
 > ```
->
 > **Ejemplo de usuarios con rol:**
->
 > ```properties
 > rundeck_user:(password),user            # Rol básico
 > rundeck_architect:(password),architect  # Creador de jobs
@@ -194,32 +207,10 @@ host    all             rundeckuser     ::1/128                 md5
 > rundeck_build:(password),build          # Integración continua
 > ```
 
-## 3.7. Reinicio de Sericios de RunDeck 
+### 3.7. Reinicio de Servicios de RunDeck
 ```bash
 sudo systemctl restart rundeckd
 
-#Ejecucion de logs de rundeck
+# Ejecución de logs de Rundeck
 tail -f /var/log/rundeck/service.log
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
