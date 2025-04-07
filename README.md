@@ -29,8 +29,14 @@ sudo netstat -tuln | grep 4440
 ```bash
 sudo yum install python3-gps
 ```
+## 1.6. Reiniciar urndeck 
+```bash
+sudo systemctl restart rundeckd
 
-### 1.6. Ejecución de Log para ver posibles problemas
+#comprobar si se esta ejecutando 
+sudo systemctl status rundeckd
+```
+### 1.7. Ejecución de Log para ver posibles problemas
 ```bash
 tail -f /var/log/rundeck/service.log
 ```
@@ -58,36 +64,57 @@ sudo yum install httpd -y
 # Habilitar e iniciar el servicio
 sudo systemctl enable httpd
 sudo systemctl start httpd
+sudo yum install httpd mod_ssl -y
 
+#Habitiliatar modulos necesarios
+sudo tee /etc/httpd/conf.modules.d/00-proxy.conf <<'EOL'
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so
+LoadModule rewrite_module modules/mod_rewrite.so
+LoadModule ssl_module modules/mod_ssl.so
+LoadModule headers_module modules/mod_headers.so
+EOL
 # Verificar estado
 sudo systemctl status httpd
 
 # Reiniciar Apache
 sudo systemctl restart httpd
+
+
 ```
 
 ### 2.3. Creación de Archivo de Configuración
 ```bash
-sudo nano /etc/apache2/sites-available/rundeck.conf
+sudo vim /etc/httpd/conf.d/rundeck.conf
 ```
 ```text
-<VirtualHost *:80>
-    ServerName 100.76.213.65
+VirtualHost *:80>
+    ServerName 10.0.0.186
+    ServerAdmin admin@yourdomain.com
 
+    # Configuración esencial del proxy
+    ProxyRequests Off
     ProxyPreserveHost On
-    ProxyPass / http://localhost:4440/
+    ProxyPass / http://localhost:4440/ timeout=600
     ProxyPassReverse / http://localhost:4440/
 
-    # Cabeceras para Tailscale
+    # Cabeceras CRÍTICAS que faltaban
+    RequestHeader set X-Forwarded-Host "10.0.0.186"  
     RequestHeader set X-Forwarded-Proto "http"
     RequestHeader set X-Forwarded-Port "80"
     RequestHeader set X-Forwarded-For "%{REMOTE_ADDR}e"
+    RequestHeader set X-Forwarded-Server "%{SERVER_NAME}e"
 
-    # WebSockets
+    # WebSockets optimizado
     RewriteEngine On
-    RewriteCond %{HTTP:Upgrade} websocket [NC]
+    RewriteCond %{HTTP:Upgrade} =websocket [NC]
     RewriteCond %{HTTP:Connection} upgrade [NC]
-    RewriteRule /(.*) ws://localhost:4440/$1 [P,L]
+    RewriteRule /(.*) ws://localhost:4440/$1 [P,L,NE]
+
+    # Configuración de logs
+    ErrorLog /var/log/httpd/rundeck_error.log
+    CustomLog /var/log/httpd/rundeck_access.log combined
 </VirtualHost>
 ```
 
@@ -98,7 +125,7 @@ sudo systemctl restart httpd
 
 ### 2.5. Configuración de Extras para el Proxy
 ```bash
-sudo nano /etc/rundeck/rundeck-config.properties
+sudo vim /etc/rundeck/rundeck-config.properties
 ```
 ```text
 grails.serverURL=http://100.76.213.65:4440
@@ -169,7 +196,7 @@ grant ALL privileges on database rundeckdb to rundeckuser;
 
 ### 3.5. Configuración del archivo de propiedades de Rundeck
 ```bash
-sudo nano /etc/rundeck/rundeck-config.properties
+sudo vim /etc/rundeck/rundeck-config.properties
 ```
 ```text
 dataSource.driverClassName = org.postgresql.Driver
@@ -186,7 +213,7 @@ dataSource.password = passwordForRundeck
 
 ### 3.6. Configuración de pg_hba.conf para IPv4 y IPv6
 ```bash
-sudo nano /var/lib/pgsql/data/pg_hba.conf
+sudo vim /var/lib/pgsql/data/pg_hba.conf
 ```
 ```bash
 # IPv4 local connections:
@@ -197,7 +224,7 @@ host    all             rundeckuser     ::1/128                 md5
 > [!TIP]
 > En este archivo podrás asignar roles a los usuarios.
 > ```bash
-> sudo nano /etc/rundeck/realm.properties
+> sudo vim /etc/rundeck/realm.properties
 > ```
 > **Ejemplo de usuarios con rol:**
 > ```properties
@@ -214,3 +241,25 @@ sudo systemctl restart rundeckd
 # Ejecución de logs de Rundeck
 tail -f /var/log/rundeck/service.log
 ```
+
+## 4 Nodos con Aechivos XLM
+
+## 4.1 Permisos Necesarios para el Usuario rundeck
+```bash
+sudo chown rundeck:rundeck /var/lib/rundeck/.ssh
+
+#comando para verificar permisos
+ls -ld .ssh
+```
+## 4.2 Creacion de llaves RSA
+```bash
+sudo -u rundeck ssh-keygen -t rsa -b 4096 -f /var/lib/rundeck/.ssh/id_rsa_pruebanodo1
+```
+## 4.3 Jecucion para hacer la comunicacion 
+```bash
+sudo -u rundeck ssh-copy-id -i /var/lib/rundeck/.ssh/id_rsa_pruebanodo1 cliente03rk@10.0.0.182
+```
+
+
+
+
