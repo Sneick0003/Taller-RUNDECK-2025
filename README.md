@@ -1,6 +1,40 @@
 # Taller-RUNDECK-2025
 Taller de Rundeck con PostgreSQL y proxies inversos.
 
+
+<details>
+  <summary>Lab</summary>
+
+  
+| Hostname               | Laboratorio | IP           | IP VPN         | User       | Password   |
+|------------------------|-------------|--------------|----------------|------------|------------|
+| Taller-Rundeck-Alondra | Alondra     | 10.0.0.183   | 100.75.34.113  | demorundec | redhat2025 |
+| Taller-Rundeck-Alondra | Alondra     | 10.0.0.185   | 100.115.190.104| demorundec | redhat2025 |
+| Taller-Rundeck-Angel   | Angel       | 10.0.0.200   | 100.109.208.48 | demorundec | redhat2025 |
+| Taller-Rundeck-Brandon | Brandon     | 10.0.0.181   | 100.116.65.103 | demorundec | redhat2025 |
+| Taller-Rundeck-Hecto   | Hecto       | 10.0.0.221   | 100.81.37.68   | demorundec | redhat2025 |
+| Taller-Rundeck-Javier  | Javier      | 10.0.0.192   | 100.82.186.128 | demorundec | redhat2025 |
+| Taller-Rundeck-Mike    | Mike        | 10.0.0.190   | 100.102.173.14 | demorundec | redhat2025 |
+| Taller-Rundeck-Omar    | Omar        | 10.0.0.195   | 100.114.185.46 | demorundec | redhat2025 |
+
+</details>
+<details>
+  <summary>clientes</summary>
+
+| Laboratorio | IP           | IP VPN         | User       | Password   |
+|-------------|--------------|----------------|------------|------------|
+| Alondra     | 10.0.0.183   | 100.75.34.113  | demorundec | redhat2025 |
+| Alondra     | 10.0.0.185   | 100.115.190.104| demorundec | redhat2025 |
+| Angel       | 10.0.0.200   | 100.109.208.48 | demorundec | redhat2025 |
+| Brandon     | 10.0.0.181   | 100.116.65.103 | demorundec | redhat2025 |
+| Hecto       | 10.0.0.221   | 100.81.37.68   | demorundec | redhat2025 |
+| Javier      | 10.0.0.192   | 100.82.186.128 | demorundec | redhat2025 |
+| Mike        | 10.0.0.190   | 100.102.173.14 | demorundec | redhat2025 |
+| Omar        | 10.0.0.195   | 100.114.185.46 | demorundec | redhat2025 |
+
+</details>
+
+
 ## Paso 1. Instalación de Rundeck Community
 
 ### 1.1. JDK Java 11
