@@ -21,18 +21,23 @@ Taller de Rundeck con PostgreSQL y proxies inversos.
 <details>
   <summary>clientes</summary>
 
-| Laboratorio | IP           | IP VPN         | User       | Password   |
-|-------------|--------------|----------------|------------|------------|
-| Alondra     | 10.0.0.183   | 100.75.34.113  | demorundec | redhat2025 |
-| Alondra     | 10.0.0.185   | 100.115.190.104| demorundec | redhat2025 |
-| Angel       | 10.0.0.200   | 100.109.208.48 | demorundec | redhat2025 |
-| Brandon     | 10.0.0.181   | 100.116.65.103 | demorundec | redhat2025 |
-| Hecto       | 10.0.0.221   | 100.81.37.68   | demorundec | redhat2025 |
-| Javier      | 10.0.0.192   | 100.82.186.128 | demorundec | redhat2025 |
-| Mike        | 10.0.0.190   | 100.102.173.14 | demorundec | redhat2025 |
-| Omar        | 10.0.0.195   | 100.114.185.46 | demorundec | redhat2025 |
+| User     | Password     | Address     | Root Password |
+|----------|--------------|-------------|----------------|
+| mike     | mike2025     | 10.0.0.191  | taller2025     |
+| javi     | javi2025     | 10.0.0.193  | taller2025     |
+| oliver   | oliver2025   | 10.0.0.194  | taller2025     |
+| antonio  | antonio2025  | 10.0.0.196  | taller2025     |
+| angel    | angel2025    | 10.0.0.199  | taller2025     |
+| brandom  | brandom2025  | 10.0.0.180  | taller2025     |
+| alondra  | alondra2025  | 10.0.0.182  | taller2024     |
+| omar     | omar2025     | 10.0.0.184  | taller2025     |
+| jatzy    | jatzy2025    | 10.0.0.186  | taller2025     |
+| sergio   | sergio2025   | 10.0.0.189  | taller2025     |
+| hector   | hector2025   | 10.0.0.220  | taller2025     |
+| miguel   | miguel2025   | 10.0.0.222  | taller2025     |
 
 </details>
+
 
 
 ## Paso 1. Instalación de Rundeck Community
