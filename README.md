@@ -299,6 +299,73 @@ sudo -u rundeck ssh-keygen -t rsa -b 4096 -f /var/lib/rundeck/.ssh/id_rsa_prueba
 sudo -u rundeck ssh-copy-id -i /var/lib/rundeck/.ssh/id_rsa_pruebanodo1 cliente03rk@10.0.0.182
 ```
 
+## 4.3 Script 
+```bash
+#!/bin/bash
+
+# Imprimir el nombre del servidor
+echo "Nombre del servidor:"
+hostname
+echo ""
+
+# Mostrar usuarios conectados actualmente
+echo "Usuarios conectados actualmente:"
+who
+echo ""
+
+# Mostrar el uso de la memoria
+echo "Memoria RAM - Información:"
+cat /proc/meminfo | grep -E "MemTotal|MemFree"
+echo ""
+
+# Mostrar el uso del disco en todos los puntos de montaje
+echo "Uso del disco por puntos de montaje:"
+df -h
+echo ""
+
+# Mostrar los últimos usuarios conectados (últimos 10 días)
+echo "Registro de últimos accesos de usuarios:"
+lastlog -t 10
+echo ""
+```
+
+
+## 5 Conexion con equipos windows Winrm
+
+## 5.1 instalcion de python3
+```bash
+sudo yum install python3-pip
+```
+## 5.2 Instalacion de Winrm
+```bash
+pip install pywinrm
+```
 
 
 
+## 6 Instalacion de Ansible 
+
+## 6.1 Intalcion de Repositorios 
+```bash
+sudo yum install epel-release –y
+```
+
+## 6.2 Instalacion de Ansible 
+```bash
+sudo yum install ansible –y
+```
+## 6.3 verificacion de ansible 
+```bash
+ansible --version
+```
+## 6.4 Instalcion de Plugins de Ansible
+```bash
+curl -L -o ansible-plugin-4.0.7.jar https://github.com/rundeck-plugins/ansible-plugin/releases/download/v4.0.7/ansible-plugin-4.0.7.jar 
+```
+## 6.5 Mover archivos del plugin a la carpeta libext
+```bash
+sudo mv ansible-plugin-4.0.7.jar /var/lib/rundeck/libext/
+
+#Reinicio del sitema rundeck
+sudo systemctl restart rundeckd 
+```
