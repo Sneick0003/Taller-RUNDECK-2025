@@ -9,13 +9,13 @@ Taller de Rundeck con PostgreSQL y proxies inversos.
 | Hostname               | Laboratorio | IP           | IP VPN         | User       | Password   |
 |------------------------|-------------|--------------|----------------|------------|------------|
 | Taller-Rundeck-Alondra | Alondra     | 10.0.0.183   | 100.75.34.113  | demorundec | redhat2025 |
-| Taller-Rundeck-Alondra | Alondra     | 10.0.0.185   | 100.115.190.104| demorundec | redhat2025 |
+| Taller-Rundeck-Omar    | Omar        | 10.0.0.185   | 100.115.190.104| demorundec | redhat2025 |
 | Taller-Rundeck-Angel   | Angel       | 10.0.0.200   | 100.109.208.48 | demorundec | redhat2025 |
 | Taller-Rundeck-Brandon | Brandon     | 10.0.0.181   | 100.116.65.103 | demorundec | redhat2025 |
 | Taller-Rundeck-Hecto   | Hecto       | 10.0.0.221   | 100.81.37.68   | demorundec | redhat2025 |
 | Taller-Rundeck-Javier  | Javier      | 10.0.0.192   | 100.82.186.128 | demorundec | redhat2025 |
 | Taller-Rundeck-Mike    | Mike        | 10.0.0.190   | 100.102.173.14 | demorundec | redhat2025 |
-| Taller-Rundeck-Omar    | Omar        | 10.0.0.195   | 100.114.185.46 | demorundec | redhat2025 |
+| Taller-Rundeck-Olive   | Olivel      | 10.0.0.195   | 100.114.185.46 | demorundec | redhat2025 |
 
 </details>
 <details>
