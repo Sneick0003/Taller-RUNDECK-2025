@@ -1,4 +1,4 @@
-# Taller-RUNDECK-2025 
+# Rundeck Install for REDHAT-9
 Taller de Rundeck con PostgreSQL y proxies inversos.
 
 
